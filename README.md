@@ -1,8 +1,8 @@
 # P5-32X32-8S-75-13A
 
-![](img/back.jpg)
-![](img/v3.gif)
-![](img/pinout.png)
+<img src=img/back.jpg height=400px /> <img src=img/v3.gif height=400px />
+
+<img src=img/pinout.png />
 
 # Чипсет
 
