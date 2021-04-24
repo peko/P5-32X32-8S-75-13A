@@ -1,18 +1,23 @@
 # P5-32X32-8S-75-13A
 
-!()[img/back.jpg]
-!()[img/v3.gif]
-!()[img/pinout.png]
+![](img/back.jpg)
+![](img/v3.gif)
+![](img/pinout.png)
 
 # Чипсет
 
-- SM245TS
-- SM74HC138D
-- MBI5124GP
+- [MBI5124GP](https://lcsc.com/product-detail/LED-Drivers_MBI-MBI5124GP-B_C256866.html) Led driver
+- [SM245TS](https://lcsc.com/product-detail/74-Series_Shenzhen-Sunmoon-Micro-SM245TS_C93846.html) Tri-state output signal Octal Transceiver
+- [SM74HC138D](https://lcsc.com/product-detail/74-Series_Shenzhen-Sunmoon-Micro-SM74HC138_C91436.html) 3-to-8 demultiplexor
 
 # Arduino library
 
 Скорости плат ардуино определенно не хватает для отрисовки на подобных панелях, но тем не менее работает.
 
-- (RGBmatrixPanelHalfScan)[/RGBmatrixPanelHalfScan]
+- [RGBmatrixPanelHalfScan](/RGBmatrixPanelHalfScan)
 
+
+# Материалы
+
+- [AdaFruits](https://learn.adafruit.com/32x16-32x32-rgb-led-matrix?view=all) Отличный гайд с описанием подключения
+- 
