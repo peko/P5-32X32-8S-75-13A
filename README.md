@@ -19,6 +19,7 @@
 # Материалы
 
 - [AdaFruits](https://learn.adafruit.com/32x16-32x32-rgb-led-matrix?view=all)
+- https://github.com/VGottselig/ESP32-RGB-Matrix-Display
 - https://www.youtube.com/watch?v=xyycbgZXPzE
 - https://www.youtube.com/watch?v=nhCGgTd7OHg
 - https://hackaday.io/project/26993-bot-matrix/log/69571-enter-the-matrix 
