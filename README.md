@@ -20,4 +20,8 @@
 # Материалы
 
 - [AdaFruits](https://learn.adafruit.com/32x16-32x32-rgb-led-matrix?view=all) Отличный гайд с описанием подключения
-- 
+- https://www.youtube.com/watch?v=xyycbgZXPzE
+- https://www.youtube.com/watch?v=nhCGgTd7OHg
+- https://hackaday.io/project/26993-bot-matrix/log/69571-enter-the-matrix 
+- http://wiki.amperka.ru/projects:rgb-led-matrix-arduino
+- https://github.com/Frans-Willem/LEDMatrixHUB75 
