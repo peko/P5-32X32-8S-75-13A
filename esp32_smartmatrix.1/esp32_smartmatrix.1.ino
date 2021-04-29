@@ -139,7 +139,9 @@ void loop() {
 //  scrollingLayer.setSpeed(40);
 //  scrollingLayer.setFont(font6x10);
 //  scrollingLayer.start("SmartMatrix Demo", 1);
-    
+  
+  backgroundLayer.setFont(font6x10);
+        
   for(int j=0; j<kMatrixHeight; j++) {
     rgb24 colorByHeight;
     #if (SKETCH_MODE == MODE_MAP_TESTING)
@@ -156,15 +158,21 @@ void loop() {
     for(int i=0; i<kMatrixWidth; i++) {
       
       #if (SKETCH_MODE == MODE_MAP_TESTING)
+      backgroundLayer.drawBitmap(0,0,&colorwheel);
       backgroundLayer.fillRectangle(48-(i>>1), 16-(i>>1), 48+(i>>1),16+(i>>1), co, cf);
       backgroundLayer.drawCircle(16, 16, i, co);
       backgroundLayer.drawLine( 0, 0, 64, 32, co);
       backgroundLayer.drawLine(64, 0,  0, 32, co);
-      backgroundLayer.drawPixel(i,j,colorByHeight);
+
+      backgroundLayer.drawString(65-i , 23, {0, 0, 0}, "Ailab");
+      backgroundLayer.drawString(64-i , 22, {0xff, 0xff, 0xff}, "Ailab");
+      
+        
       #endif
       
+      backgroundLayer.drawPixel(i,j,colorByHeight);
       backgroundLayer.swapBuffers();   
-      delay(10);  
+      delay(20);  
 
       backgroundLayer.fillScreen({0,0,0});
     }
