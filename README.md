@@ -9,12 +9,14 @@
 - [SM245TS](https://lcsc.com/product-detail/74-Series_Shenzhen-Sunmoon-Micro-SM245TS_C93846.html) Tri-state output signal Octal Transceiver
 - [SM74HC138D](https://lcsc.com/product-detail/74-Series_Shenzhen-Sunmoon-Micro-SM74HC138_C91436.html) 3-to-8 demultiplexor
 
-# Arduino library
+# Примеры
 
 Скорости плат ардуино определенно не хватает для отрисовки на подобных панелях, но тем не менее работает.
 
-- [RGBmatrixPanelHalfScan](/RGBmatrixPanelHalfScan)
-
+- [RGBmatrixPanelHalfScan](/RGBmatrixPanelHalfScan) - пример под arduino
+- [esp32_barebone.0](/esp32_barebone.0) - пример под esp32 - тест развертки, вывод на 2 панели
+- [esp32_barebone.1](/esp32_barebone.1) - пример под esp32 - тест вывода на 2 панели, после мепинга развертки
+- [esp32_smartmatrix](/esp_32smartmatrix_0) - тест библиотеки SmartMatrix
 
 # Материалы
 
