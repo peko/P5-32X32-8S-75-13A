@@ -93,28 +93,34 @@
 #define COLOR_DEPTH 24                  // leave this as 24 for this sketch
 
 #if (SKETCH_MODE == MODE_MAP_REVERSE_ENGINEERING)
-const uint16_t kMatrixWidth = 64;        // must be multiple of 8
+const uint16_t kMatrixWidth = 128;        // must be multiple of 8
 const uint16_t kMatrixHeight = 4;
 const uint8_t kPanelType = SM_PANELTYPE_HUB75_4ROW_MOD2SCAN;    // Use this to reverse engineer mapping for a MOD2 panel
 //const uint8_t kPanelType = SM_PANELTYPE_HUB75_8ROW_MOD4SCAN;  // Use this to reverse engineer mapping for a MOD4 panel
 #endif
 
 #if (SKETCH_MODE == MODE_MAP_TESTING)
-const uint16_t kMatrixWidth = 32;        // must be multiple of 8
+const uint16_t kMatrixWidth = 64;        // must be multiple of 8
 const uint16_t kMatrixHeight = 32;
-const uint8_t kPanelType = SMARTMATRIX_HUB75_32ROW_32COL_MOD8SCAN;   // use SM_PANELTYPE_HUB75_16ROW_MOD8SCAN for common 16x32 panels
+const uint8_t kPanelType = SMARTMATRIX_HUB75_32ROW_64COL_MOD8SCAN;   // use SM_PANELTYPE_HUB75_16ROW_MOD8SCAN for common 16x32 panels
 #endif
 
 const uint8_t kRefreshDepth = 36;       // leave as 36 for this sketch
 const uint8_t kDmaBufferRows = 4;       // known working: 2-4, use 2 to save memory, more to keep from dropping frames and automatically lowering refresh rate
 const uint32_t kMatrixOptions = (SM_HUB75_OPTIONS_NONE);      // see http://docs.pixelmatix.com/SmartMatrix for options
 const uint8_t kBackgroundLayerOptions = (SM_BACKGROUND_OPTIONS_NONE);
+//const uint8_t kScrollingLayerOptions = (SM_SCROLLING_OPTIONS_NONE);
+//const uint8_t kIndexedLayerOptions = (SM_INDEXED_OPTIONS_NONE);
 
 SMARTMATRIX_ALLOCATE_BUFFERS(matrix, kMatrixWidth, kMatrixHeight, kRefreshDepth, kDmaBufferRows, kPanelType, kMatrixOptions);
 SMARTMATRIX_ALLOCATE_BACKGROUND_LAYER(backgroundLayer, kMatrixWidth, kMatrixHeight, COLOR_DEPTH, kBackgroundLayerOptions);
+//SMARTMATRIX_ALLOCATE_SCROLLING_LAYER(scrollingLayer, kMatrixWidth, kMatrixHeight, COLOR_DEPTH, kScrollingLayerOptions);
 
 void setup() {
-  matrix.addLayer(&backgroundLayer); 
+  
+  matrix.addLayer(&backgroundLayer);
+//  matrix.addLayer(&scrollingLayer);
+  
   matrix.begin();
 
   matrix.setBrightness(128);
@@ -123,10 +129,24 @@ void setup() {
   backgroundLayer.swapBuffers();   
 }
 
+void test() {
+
+}
+
 void loop() {
+//  scrollingLayer.setColor({0xff, 0xff, 0xff});
+//  scrollingLayer.setMode(wrapForward);
+//  scrollingLayer.setSpeed(40);
+//  scrollingLayer.setFont(font6x10);
+//  scrollingLayer.start("SmartMatrix Demo", 1);
+    
   for(int j=0; j<kMatrixHeight; j++) {
     rgb24 colorByHeight;
-
+    #if (SKETCH_MODE == MODE_MAP_TESTING)
+    rgb24 co = {(uint8_t)random(192), (uint8_t)random(192), (uint8_t)random(192)};
+    rgb24 cf = {(uint8_t)random(192), (uint8_t)random(192), (uint8_t)random(192)};
+    #endif
+    // test();
     colorByHeight.red = 0xff;
     if(j & 0x01)
       colorByHeight.green = 0xff;
@@ -134,9 +154,17 @@ void loop() {
       colorByHeight.blue = 0xff;
       
     for(int i=0; i<kMatrixWidth; i++) {
+      
+      #if (SKETCH_MODE == MODE_MAP_TESTING)
+      backgroundLayer.fillRectangle(48-(i>>1), 16-(i>>1), 48+(i>>1),16+(i>>1), co, cf);
+      backgroundLayer.drawCircle(16, 16, i, co);
+      backgroundLayer.drawLine( 0, 0, 64, 32, co);
+      backgroundLayer.drawLine(64, 0,  0, 32, co);
       backgroundLayer.drawPixel(i,j,colorByHeight);
+      #endif
+      
       backgroundLayer.swapBuffers();   
-      delay(250);  
+      delay(10);  
 
       backgroundLayer.fillScreen({0,0,0});
     }

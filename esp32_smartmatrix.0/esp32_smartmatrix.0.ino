@@ -10,7 +10,7 @@
     - Check the documentation Wiki for more details on why you may or may not want to use these layers
 */
 
-//#define USE_ADAFRUIT_GFX_LAYERS
+// #define USE_ADAFRUIT_GFX_LAYERS
 
 // uncomment one line to select your MatrixHardware configuration - configuration header needs to be included before <SmartMatrix.h>
 //#include <MatrixHardware_Teensy3_ShieldV4.h>        // SmartLED Shield for Teensy 3 (V4)
