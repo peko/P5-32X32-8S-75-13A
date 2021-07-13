@@ -84,6 +84,9 @@
 #include "MatrixHardwareCustom.h"                  // Copy an existing MatrixHardware file to your Sketch directory, rename, customize, and you can include it like this
 #include <SmartMatrix.h>
 
+//#include "colorwheel.c"
+#include "ai.8x8.c"
+
 #define MODE_MAP_REVERSE_ENGINEERING  0
 #define MODE_MAP_TESTING              1
 
@@ -100,7 +103,7 @@ const uint8_t kPanelType = SM_PANELTYPE_HUB75_4ROW_MOD2SCAN;    // Use this to r
 #endif
 
 #if (SKETCH_MODE == MODE_MAP_TESTING)
-const uint16_t kMatrixWidth = 64;        // must be multiple of 8
+const uint16_t kMatrixWidth = 96;        // must be multiple of 8
 const uint16_t kMatrixHeight = 32;
 const uint8_t kPanelType = SMARTMATRIX_HUB75_32ROW_64COL_MOD8SCAN;   // use SM_PANELTYPE_HUB75_16ROW_MOD8SCAN for common 16x32 panels
 #endif
@@ -129,10 +132,21 @@ void setup() {
   backgroundLayer.swapBuffers();   
 }
 
-void test() {
-
+void drawBitmap(int16_t x, int16_t y, const ico8x8* bitmap) {
+  for(unsigned int i=0; i < bitmap->height; i++) {
+    for(unsigned int j=0; j < bitmap->width; j++) {
+      if(bitmap->pixel_data[(i*bitmap->width + j)*3 + 0]>10) {
+        rgb24 pixel = { bitmap->pixel_data[(i*bitmap->width + j)*3 + 0],
+                        bitmap->pixel_data[(i*bitmap->width + j)*3 + 1],
+                        bitmap->pixel_data[(i*bitmap->width + j)*3 + 2] };
+  
+        backgroundLayer.drawPixel(x + j, y + i, pixel);
+      }
+    }
+  }
 }
 
+int32_t s=0;
 void loop() {
 //  scrollingLayer.setColor({0xff, 0xff, 0xff});
 //  scrollingLayer.setMode(wrapForward);
@@ -141,6 +155,7 @@ void loop() {
 //  scrollingLayer.start("SmartMatrix Demo", 1);
   
   backgroundLayer.setFont(font6x10);
+  
         
   for(int j=0; j<kMatrixHeight; j++) {
     rgb24 colorByHeight;
@@ -154,19 +169,23 @@ void loop() {
       colorByHeight.green = 0xff;
     if(j & 0x02)
       colorByHeight.blue = 0xff;
-      
+
+
+    
     for(int i=0; i<kMatrixWidth; i++) {
       
       #if (SKETCH_MODE == MODE_MAP_TESTING)
-      backgroundLayer.drawBitmap(0,0,&colorwheel);
-      backgroundLayer.fillRectangle(48-(i>>1), 16-(i>>1), 48+(i>>1),16+(i>>1), co, cf);
-      backgroundLayer.drawCircle(16, 16, i, co);
+      // backgroundLayer.fillRectangle(48-(i>>1), 16-(i>>1), 48+(i>>1),16+(i>>1), co, cf);
+      int8_t r = 10+sin((s++)/8.0)*6.0;
+      backgroundLayer.drawRectangle(47-r, 15-r, 48+r,16+r, cf);
+      
+      backgroundLayer.drawCircle(16, 16, i, cf);
       backgroundLayer.drawLine( 0, 0, 64, 32, co);
       backgroundLayer.drawLine(64, 0,  0, 32, co);
 
-      backgroundLayer.drawString(65-i , 23, {0, 0, 0}, "Ailab");
-      backgroundLayer.drawString(64-i , 22, {0xff, 0xff, 0xff}, "Ailab");
-      
+      // backgroundLayer.drawString(65-i , 23, {0, 0, 0}, "Ailab");
+      // backgroundLayer.drawString(64-i , 22, {0xff, 0xff, 0xff}, "Ailab");
+      drawBitmap(44,12,&ai8x8);
         
       #endif
       

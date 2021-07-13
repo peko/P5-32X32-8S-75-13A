@@ -63,23 +63,23 @@
 #define MATRIX_DATA_STORAGE_TYPE uint16_t
 #define CLKS_DURING_LATCH   0
 
-#define R1_PIN  GPIO_NUM_17
-#define G1_PIN  GPIO_NUM_16
-#define B1_PIN  GPIO_NUM_2
-#define R2_PIN  GPIO_NUM_4
-#define G2_PIN  GPIO_NUM_0
-#define B2_PIN  GPIO_NUM_15
+#define R1_PIN  GPIO_NUM_2
+#define G1_PIN  GPIO_NUM_15
+#define B1_PIN  GPIO_NUM_0
+#define R2_PIN  GPIO_NUM_16
+#define G2_PIN  GPIO_NUM_4
+#define B2_PIN  GPIO_NUM_17
 
-#define A_PIN   GPIO_NUM_19
+#define A_PIN   GPIO_NUM_5
 #define B_PIN   GPIO_NUM_18
-#define C_PIN   GPIO_NUM_5
+#define C_PIN   GPIO_NUM_19
 #define D_PIN   -1
 #define E_PIN   -1
 
-#define LAT_PIN GPIO_NUM_21
-#define OE_PIN  GPIO_NUM_22
+#define LAT_PIN GPIO_NUM_22
+#define OE_PIN  GPIO_NUM_23
 
-#define CLK_PIN GPIO_NUM_23
+#define CLK_PIN GPIO_NUM_21
 
 //#define DEBUG_PINS_ENABLED
 #define DEBUG_1_GPIO    GPIO_NUM_1
