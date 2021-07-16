@@ -7,15 +7,17 @@
 #include "MatrixHardwareCustom.h"                  // Copy an existing MatrixHardware file to your Sketch directory, rename, customize, and you can include it like this
 #include <SmartMatrix.h>
 
+//#include "colorwheel.c"
+// #include "ai.8x8.c"
 
 #define SENSOR_1 34
 #define SENSOR_2 35
-
-const uint8_t sensor_pins[3] = {SENSOR_1, SENSOR_2};
+#define SENSOR_3 32
+const uint8_t sensor_pins[3] = {SENSOR_1, SENSOR_2, SENSOR_3};
 
 #define COLOR_DEPTH 24                  // leave this as 24 for this sketch
 
-const uint16_t kMatrixWidth  = 64;        // must be multiple of 8
+const uint16_t kMatrixWidth  = 96;        // must be multiple of 8
 const uint16_t kMatrixHeight = 32;
 const uint8_t kPanelType     = SMARTMATRIX_HUB75_32ROW_64COL_MOD8SCAN;   // use SM_PANELTYPE_HUB75_16ROW_MOD8SCAN for common 16x32 panels
 
@@ -32,7 +34,7 @@ SMARTMATRIX_ALLOCATE_BACKGROUND_LAYER(backgroundLayer, kMatrixWidth, kMatrixHeig
 
 void setup() {
 
-  for(uint8_t i=0; i<2; i++) pinMode(sensor_pins[i], INPUT);
+  for(uint8_t i=0; i<3; i++) pinMode(sensor_pins[i], INPUT);
    
   matrix.addLayer(&backgroundLayer);
   matrix.begin();
@@ -67,14 +69,14 @@ R = {0xFF, 0x00, 0x00},
 Y = {0xFF, 0xDF, 0x00},
 G = {0x00, 0xFF, 0x00}; 
 
-float   timers[2] = {0.0};
-uint8_t signals[2] = {0};
+float   timers[3] = {0.0};
+uint8_t signals[3] = {0};
 
 #define GREEN  0
 #define RED    1
 #define YELLOW 2
-uint8_t states[2] = {GREEN, GREEN};
-uint8_t old_states[2] = {GREEN, GREEN};
+uint8_t states[3] = {GREEN, GREEN, GREEN};
+uint8_t old_states[3] = {GREEN, GREEN, GREEN};
 
 void inline drawTimer (uint32_t t, uint8_t h) {
     char timer[] = "00:00";
@@ -106,9 +108,9 @@ void inline drawSignal(uint8_t i) {
 
 void inline updateSignals() {
   
-  for(uint8_t i=0; i<2; i++) {
-    uint8_t s = digitalRead(sensor_pins[i]);
-    s=1;
+  for(uint8_t i=0; i<3; i++) {
+    // uint8_t s = digitalRead(sensor_pins[i]);
+    uint8_t s=1;
     if(signals[i]!=s) {
       if(s) states[i] = 255; // 0 -> 1 to Red
       else  states[i] = 254; // 1 -> 0 to Yellow
@@ -122,7 +124,7 @@ void inline updateSignals() {
 }
 
 inline void drawSignals() {
-   for(uint8_t i=0; i<2; i++) drawSignal(i);
+   for(uint8_t i=0; i<3; i++) drawSignal(i);
 }
 
 void loop() {
@@ -135,5 +137,5 @@ void loop() {
   delay(20);  
   
   backgroundLayer.fillScreen({0,0,0});
-  // delay(20);  
+  
 }

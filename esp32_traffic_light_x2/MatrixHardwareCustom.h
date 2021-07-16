@@ -43,8 +43,7 @@
 #define R1_PIN  GPIO_NUM_12
 #define G1_PIN  GPIO_NUM_27
 #define B1_PIN  GPIO_NUM_14
-
-#define R2_PIN  GPIO_NUM_33
+#define R2_PIN  GPIO_NUM_13
 #define G2_PIN  GPIO_NUM_26
 #define B2_PIN  GPIO_NUM_25
 
@@ -54,9 +53,10 @@
 #define D_PIN   -1
 #define E_PIN   -1
 
-#define CLK_PIN GPIO_NUM_23
 #define LAT_PIN GPIO_NUM_22
 #define OE_PIN  GPIO_NUM_21
+
+#define CLK_PIN GPIO_NUM_23
 
 //#define DEBUG_PINS_ENABLED
 #define DEBUG_1_GPIO    GPIO_NUM_1

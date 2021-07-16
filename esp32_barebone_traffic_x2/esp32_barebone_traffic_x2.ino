@@ -26,73 +26,55 @@ int row = 0;
 int c = 0;
 int r = 0;
 
+// Сколько по времени занято
 float   timers[2] = {0.0};
+// Сигал от датчика
 uint8_t signals[2] = {0};
-
-
-
-void inline draw_signal(uint8_t i) {
-  rgb24 c;
-  // КРАСНЫЙ
-  if (states[i]==255) { 
-    timers[i]++; 
-    for (uint8_t col = 0; col < 32*2; col++) {
-      SetPinFast(P_R1, 1);
-      SetPinFast(P_G1, 0);  
-      SetPinFast(P_B1, 0);
-      SetPinFast(P_R2, 1);
-      SetPinFast(P_G2, 0);  
-      SetPinFast(P_B2, 0);          
-    }
-    
-  // ЖЕЛТЫЙ моргает
-  } else if(states[i]>0 && states[i]<255) {
-    // яркость желтого
-    uint8_t v = abs(8-states[i]%16);
-    v = 63+v*16;
-    for (uint8_t col = 0; col < 32*2; col++) {
-      uint8_t r = rand()%256;
-      uint8_t c = v<r;
-      SetPinFast(P_R1, c);
-      SetPinFast(P_G1, c);  
-      SetPinFast(P_B1, 0);
-      SetPinFast(P_R2, c);
-      SetPinFast(P_G2, c);  
-      SetPinFast(P_B2, 0);
-    }
-
-  // ЗЕЛЕНЫЙ
-  } else {
-     for (uint8_t col = 0; col < 32*2; col++) {
-      SetPinFast(P_R1, 0);
-      SetPinFast(P_G1, 1);  
-      SetPinFast(P_B1, 0);
-      SetPinFast(P_R2, 0);
-      SetPinFast(P_G2, 1);  
-      SetPinFast(P_B2, 0);
-    }
-    timers[i] = 0;
-  }
-}
+// Стейт
+// 0      - зеленый
+// 1..254 - желтый
+// 255    - красный
+uint8_t states[2] = {0};
 
 
 void inline update_signals() {
   
-  for(uint8_t i=0; i<3; i++) {
+  for(uint8_t i=0; i<2; i++) {
     // uint8_t s = digitalRead(sensor_pins[i]);
-    uint8_t s=1;
+    // Тест - если рандом, мееняем сигнал
+    uint16_t r = rand()%100;
+    // Serial.println(r);
+    uint8_t s = ( r == 1) ? !signals[i] : signals[i];
+    // Если сигнал изменился
     if(signals[i]!=s) {
+      //Serial.print("Signal changed: ");
+      //Serial.print(i);
+      //Serial.print("-");
+      //Serial.println(s);
+      // С нуля на единицу, зеленый -> переходит в красный
       if(s) states[i] = 255; // 0 -> 1 to Red
-      else  states[i] = 254; // 1 -> 0 to Yellow
+      // С единицы на ноль красный -> желтый
+      else states[i] = 254; // 1 -> 0 to Yellow
+      //else states[i] = 0;
     }
     signals[i] = s;
 
-    // timeout yellow state
+    // Если красный - таймер увеличиваем
+    if(states[i]==255) { 
+      timers[i]++;
+    // Если зеленый таймер сбрасываем
+    } if (states[i]==0) {
+      timers[i] = 0;
+    }
+   
+    // Если желтый, стейт постепенно сматываем до нуля
     if(states[i]>0 && states[i]<255) states[i]--;
   }
   
 }
 
+
+// Рисуем одну строку
 void IRAM_ATTR draw_row() {
   uint32_t gpio = GPIO.out;
   
@@ -118,20 +100,42 @@ void IRAM_ATTR draw_row() {
   // | 0          31| RGB 1
   // +----- ~ ------+
   
-  
   for (uint8_t col = 0; col < 32*4; col++) {
+      // 64 диода на панель 
+      uint8_t i = col/64;
+      // КРАСНЫЙ
+      if (states[i]==255) { 
+        SetPinFast(P_R1, 1);
+        SetPinFast(P_G1, 0);  
+        SetPinFast(P_B1, 0);
+        SetPinFast(P_R2, 1);
+        SetPinFast(P_G2, 0);  
+        SetPinFast(P_B2, 0);      
       
+      // ЖЕЛТЫЙ моргает
+      } else if(states[i]>0 && states[i]<255) {
+        // яркость желтого (зигзаг)
+        // uint8_t v = abs(8-states[i]%16);
+        // v = 63+v*16;
+        // uint8_t r = rand()%128;
+        // uint8_t c = v<r;
+        uint8_t c = states[i]/4%2;
+        SetPinFast(P_R1, c);
+        SetPinFast(P_G1, c);  
+        SetPinFast(P_B1, 0);
+        SetPinFast(P_R2, c);
+        SetPinFast(P_G2, c);  
+        SetPinFast(P_B2, 0);
 
-      /*
-      SetPinFast(P_R1, col<=c && col > c-r%16);
-      SetPinFast(P_G1, col< c && col > c-r%32);  
-      SetPinFast(P_B1, 0);
-      SetPinFast(P_R2, col< 0);
-      SetPinFast(P_G2, col< c && col > c-r%16);  
-      SetPinFast(P_B2, col<=c && col > c-r% 8);
-      */
-      drawSignal(x/32);
-      
+      // ЗЕЛЕНЫЙ
+      } else {
+        SetPinFast(P_R1, 0);
+        SetPinFast(P_G1, 1);  
+        SetPinFast(P_B1, 0);
+        SetPinFast(P_R2, 0);
+        SetPinFast(P_G2, 1);  
+        SetPinFast(P_B2, 0);
+      }
       
       GPIO.out = gpio;
       
@@ -155,6 +159,7 @@ void IRAM_ATTR draw_row() {
 // Включаем дисплей
 // SetPinFast(OE, LOW);
 
+  // переключаем строку
   row+=1;
   row = row%8;
 }
@@ -187,6 +192,7 @@ void loop2_task(void *pvParameter)
     r+=1;
     r%=8;
   }
+  update_signals();
   vTaskDelay(100);
  }
 }
@@ -225,5 +231,7 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
+ 
+  // delay(20);  
 
 }
