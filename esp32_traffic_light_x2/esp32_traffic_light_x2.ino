@@ -109,14 +109,14 @@ void inline drawSignal(uint8_t i) {
 void inline updateSignals() {
   
   for(uint8_t i=0; i<3; i++) {
-    // uint8_t s = digitalRead(sensor_pins[i]);
-    uint8_t s=1;
+    uint8_t s = digitalRead(sensor_pins[i]);
+    s = 1;
     if(signals[i]!=s) {
       if(s) states[i] = 255; // 0 -> 1 to Red
       else  states[i] = 254; // 1 -> 0 to Yellow
     }
     signals[i] = s;
-
+    
     // timeout yellow state
     if(states[i]>0 && states[i]<255) states[i]--;
   }

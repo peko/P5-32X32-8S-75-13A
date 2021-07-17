@@ -3,6 +3,8 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 
+/*
+
 #define P_R1 12
 #define P_G1 27
 #define P_B1 14
@@ -18,6 +20,26 @@
 #define CLK  23
 #define LAT  22
 #define OE   21
+
+*/
+
+#define P_R1 2
+#define P_G1 0
+#define P_B1 15
+
+#define P_R2  4
+#define P_G2 17
+#define P_B2 16
+
+#define CH_A  5
+#define CH_B 18  
+#define CH_C 19
+
+#define CLK  21
+#define LAT  22
+#define OE   23
+
+
 
 #define SetColorPin(pin,  state) state > layer ? gpio |= 1 << pin : gpio &= ~(1 << pin);
 #define SetPinFast(pin,  state) state? gpio |= 1 << pin : gpio &= ~(1 << pin);
@@ -167,19 +189,21 @@ void IRAM_ATTR draw_row() {
 // Строка отрисовки
 int loops = 10;
 int loop_n = 0;
-int loop_n_on = 9;
+int loop_n_on = 0;
+int loop_n_off = 1;
+
 // Таймер вызова
 hw_timer_t* displayUpdateTimer = NULL;
 void IRAM_ATTR onDisplayUpdate() {
   if (loop_n == 0) draw_row();         //Display OFF-time (25 µs).
   if (loop_n == loop_n_on) {
     GPIO.out_w1tc = ((uint32_t)1 << OE);       //Turn Display ON
-    //GPIO.out_w1ts = ((uint32_t)1 << OE);       //Turn Display ON
+  };
+  
+  if (loop_n == loop_n_off) {
+    GPIO.out_w1ts = ((uint32_t)1 << OE);       //Turn Display OFF
   }
-  loop_n = loop_n + 1;
-  if (loop_n >= loops) {
-      loop_n = 0;
-  }
+  loop_n = (loop_n + 1)%loops;  
 }
 
 //runs faster then default void loop(). why? runs on other core?
